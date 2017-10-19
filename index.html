@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        canvas  {
+            width: 500px;
+            height: 500px;
+            border: 1px solid black;
+        }
+        textarea {
+            width: 100px;
+            height: 50px;
+            border: none;
+            display: none;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: relative;">
+            <canvas id="t"></canvas>
+            <canvas id="s" style="position: absolute;top:0;left:0;"></canvas>
+            <textarea class="sketch-toolkit__input"></textarea>
+    </div>
+    <div>
+        <button onclick="useBrush()">画笔</button>
+        <button onclick="useLine()">直线</button>
+        <button onclick="useArrow()">箭头</button>
+        <button onclick="useCircle()">圆</button>
+        <button onclick="useRect()">矩形</button>
+        <button onclick="useText()">文字</button>
+        <button onclick="_clear()">清空</button>
+        <button onclick="save()">保存</button>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.4/lodash.min.js"></script>
+    <script src="./dist/Sketch.js"></script>
+    <script>
+        const sketch = new Sketch(Promise, {
+                    canvasName         : "t",
+                    drawingLayerCanvas : "s",
+                    width: 500,
+                    height: 500,
+                    eventEmitter: $.on
+                    
+                }, {
+                    color: "#000000",
+                    highlightColor: "#D4FF32",
+
+                    highlightSize: 9,
+                    brushSize: 3,
+                    shapeSize: 3,
+                    fontSize: 20,
+                    shapeType: 2
+                });
+            var img = new Image();
+            img.onload = function() {
+                sketch.openHtmlImage('', img, 'FIT', 600, 600);
+            }
+            img.src = './1.jpg';
+            sketch.useBrush();
+
+            function useBrush() {
+                sketch.useBrush();
+            }
+            function useLine() {
+                sketch.useShapeTool(Sketch.SHAPE_TYPES[3]);
+            }
+            function useArrow() {
+                sketch.useShapeTool(Sketch.SHAPE_TYPES[2]);
+            }
+            function useCircle() {
+                sketch.useShapeTool(Sketch.SHAPE_TYPES[1]);
+            }
+            function useRect() {
+                sketch.useShapeTool(Sketch.SHAPE_TYPES[0]);
+            }
+            function useText() {
+                sketch.useTextTool();
+            }
+            function _clear() {
+                sketch.clear();
+            }
+            function save() {
+                sketch.createImageSaveData().then(function(value) {window.open(window.URL.createObjectURL(value.thumbnailImage))})
+            }
+    </script>
+</body>
+</html>
